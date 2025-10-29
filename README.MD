@@ -1,4 +1,4 @@
-# 🚀 Trace logger - Advanced Logging System for Node.js
+# 🚀 Patal Log - Advanced Logging System for Node.js
 
 ![Scale](https://img.shields.io/badge/Scale-Trace-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)
@@ -24,14 +24,14 @@
 
 ## 🚀 Overview
 
-**Trace Logger** is a comprehensive, production-ready logging library designed for modern **Node.js** applications.  
+**Patal Log** is a comprehensive, production-ready logging library designed for modern **Node.js** applications.  
 It provides **structured logging**, **circuit breaker protection**, **log rotation**, and **HTTP request tracking** out of the box.  
 
 Built with **TypeScript** and supporting both **CommonJS** and **ESM modules**, it's perfect for applications of any scale.
 
 ---
 
-### 💡 Why Trace Logger?
+### 💡 Why Patal Log?
 
 | Feature | Description |
 |----------|--------------|
@@ -44,7 +44,7 @@ Built with **TypeScript** and supporting both **CommonJS** and **ESM modules**, 
 
 ---
 
-> **Trace Logger** — Simple, Fast, and Reliable Logging for Scalable Node.js Applications ⚡
+> **Patal Log** — Simple, Fast, and Reliable Logging for Scalable Node.js Applications ⚡
 
 
 
@@ -67,10 +67,10 @@ Built with **TypeScript** and supporting both **CommonJS** and **ESM modules**, 
 
 ## 📦 Installation
 
-Install **Trace logger** using npm:
+Install **Patal Log** using npm:
 
 ```bash
-npm install trace-logger 
+npm install patal-log 
 ```
 
 ---
@@ -94,7 +94,7 @@ npm install express uuid
 ### ⚙️ CommonJS Usage
 
 ```javascript
-const { logger, httpLogger } = require('trace-logger');
+const { logger, httpLogger } = require('patal-log');
 const express = require('express');
 
 const app = express();
@@ -125,7 +125,7 @@ app.listen(3000);
 ### ⚙️ ESM Usage
 
 ```javascript
-import { logger, httpLogger } from 'trace-logger';
+import { logger, httpLogger } from 'patal-log';
 import express from 'express';
 
 const app = express();
@@ -159,7 +159,7 @@ app.listen(3000);
 
 ### 1. 🔹 Log Levels
 
-**Trace Logger** supports four log levels with the following hierarchy:
+**Patal Log** supports four log levels with the following hierarchy:
 
 DEBUG → INFO → WARN → ERROR
 
@@ -190,13 +190,13 @@ Once the system stabilizes, logging automatically resumes.
 
 ### 🧩 Circuit Breaker Flow (Visual Representation)
 
-You can visualize how the **Circuit Breaker** works in **Trace Logger** using this flowchart:
+You can visualize how the **Circuit Breaker** works in **Patal Log** using this flowchart:
 
 ---
 
 ### 🧩 Circuit Breaker Flow (Visual Representation)
 
-You can visualize how the **Circuit Breaker** mechanism works in **Trace Logger** using this flow diagram:
+You can visualize how the **Circuit Breaker** mechanism works in **Patal Log** using this flow diagram:
 
 ![Circuit Breaker Flow](https://i.postimg.cc/7YjMHcNG/deepseek-mermaid-20251029-0fb37f.png)
 
@@ -261,7 +261,7 @@ It captures details like method, URL, response time, and trace ID — helping yo
 
 ```javascript
 import express from 'express';
-import { logger, httpLogger } from 'trace-logger';
+import { logger, httpLogger } from 'patal-log';
 
 const app = express();
 
@@ -377,7 +377,7 @@ Captures:
 **Example:**
 ```javascript
 import express from 'express';
-import { httpLogger } from 'trace-logger';
+import { httpLogger } from 'patal-log';
 
 const app = express();
 app.use(httpLogger());
@@ -451,7 +451,7 @@ app.use(httpLogger());
 
 ### 📁 Log File Structure
 
-When log rotation is enabled, Trace Logger automatically creates timestamped backups of your log files to prevent size overflow.
+When log rotation is enabled, Patal Log automatically creates timestamped backups of your log files to prevent size overflow.
 
 ```text
 logs/
@@ -466,10 +466,10 @@ logs/
 
 ## 📘 Complete Example Configuration
 
-Here’s a full example showing how to initialize **Trace Logger** with all major configuration options enabled — including **file rotation**, **circuit breaker**, and **custom colors**.
+Here’s a full example showing how to initialize **Patal Log** with all major configuration options enabled — including **file rotation**, **circuit breaker**, and **custom colors**.
 
 ```javascript
-import { logger } from 'trace-logger';
+import { logger } from 'patal-log';
 
 logger.init({
   // Logging mode
@@ -549,7 +549,7 @@ Combine this setup with the `httpLogger()` middleware to automatically log incom
 
 ```javascript
 import express from 'express';
-import { httpLogger } from 'trace-logger';
+import { httpLogger } from 'patal-log';
 
 const app = express();
 
@@ -557,7 +557,7 @@ const app = express();
 app.use(httpLogger()); // Logs all incoming HTTP requests automatically
 
 app.get('/', (req, res) => {
-  res.send('Hello, Trace Logger is working!');
+  res.send('Hello, Patal log is working!');
 });
 
 app.listen(3000, () => console.log('🚀 Server running on port 3000'));
@@ -680,7 +680,7 @@ Demonstrates how to integrate the `httpLogger()` middleware into an Express app 
 
 ```javascript
 import express from 'express';
-import { httpLogger } from 'trace-logger';
+import { httpLogger } from 'patal-log';
 
 const app = express();
 
@@ -886,7 +886,7 @@ Please review our **Contributing Guidelines** before submitting a pull request.
 
 ```bash
 # Clone repository
-git clone https://github.com/Arbazkhanark/trace-logger
+git clone https://github.com/Arbazkhanark/patal-log
 
 # Install dependencies
 npm install
@@ -910,12 +910,12 @@ See the [LICENSE](./LICENSE) file for complete details.
 ## 🆘 Support
 
 - 📚 **Documentation** — Explore the full usage guide and complete API reference.  
-- 🐛 **Issue Tracker** — Found a bug or have a feature request? [Open an issue](https://github.com/Arbazkhanark/trace-logger).  
+- 🐛 **Issue Tracker** — Found a bug or have a feature request? [Open an issue](https://github.com/Arbazkhanark/patal-log).  
 - 💬 **Discussions** — Join our developer community to share feedback and ideas.  
 
 ---
 
-**Trace Logger** — Built with ❤️ for the **Node.js** community.  
+**Patal Log** — Built with ❤️ for the **Node.js** community.  
 Empowering developers with reliable, production-grade logging and tracing.
 
 ---

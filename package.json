@@ -1,6 +1,6 @@
 {
-  "name": "trace-logger",
-  "version": "0.0.1",
+  "name": "patal-log",
+  "version": "1.0.0",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
@@ -17,7 +17,7 @@
   "description": "A scalable, dual-module logging and tracing library for Node.js with circuit breaker and log rotation support.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Arbazkhanark/trace-logger"
+    "url": "https://github.com/Arbazkhanark/patal-log"
   },
   "keywords": [
     "logger",
