@@ -1,4 +1,4 @@
-# 🚀 Scale Trace - Advanced Logging System for Node.js
+# 🚀 Trace logger - Advanced Logging System for Node.js
 
 ![Scale](https://img.shields.io/badge/Scale-Trace-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)
@@ -24,14 +24,14 @@
 
 ## 🚀 Overview
 
-**Scale Trace** is a comprehensive, production-ready logging library designed for modern **Node.js** applications.  
+**Trace Logger** is a comprehensive, production-ready logging library designed for modern **Node.js** applications.  
 It provides **structured logging**, **circuit breaker protection**, **log rotation**, and **HTTP request tracking** out of the box.  
 
 Built with **TypeScript** and supporting both **CommonJS** and **ESM modules**, it's perfect for applications of any scale.
 
 ---
 
-### 💡 Why Scale Trace?
+### 💡 Why Trace Logger?
 
 | Feature | Description |
 |----------|--------------|
@@ -44,7 +44,7 @@ Built with **TypeScript** and supporting both **CommonJS** and **ESM modules**, 
 
 ---
 
-> **Scale Trace** — Simple, Fast, and Reliable Logging for Scalable Node.js Applications ⚡
+> **Trace Logger** — Simple, Fast, and Reliable Logging for Scalable Node.js Applications ⚡
 
 
 
@@ -67,10 +67,10 @@ Built with **TypeScript** and supporting both **CommonJS** and **ESM modules**, 
 
 ## 📦 Installation
 
-Install **Scale Trace** using npm:
+Install **Trace logger** using npm:
 
 ```bash
-npm install scale-trace 
+npm install trace-logger 
 ```
 
 ---
@@ -94,7 +94,7 @@ npm install express uuid
 ### ⚙️ CommonJS Usage
 
 ```javascript
-const { logger, httpLogger } = require('scale-trace');
+const { logger, httpLogger } = require('trace-logger');
 const express = require('express');
 
 const app = express();
@@ -125,7 +125,7 @@ app.listen(3000);
 ### ⚙️ ESM Usage
 
 ```javascript
-import { logger, httpLogger } from 'scale-trace';
+import { logger, httpLogger } from 'trace-logger';
 import express from 'express';
 
 const app = express();
@@ -159,7 +159,7 @@ app.listen(3000);
 
 ### 1. 🔹 Log Levels
 
-**Scale Trace** supports four log levels with the following hierarchy:
+**Trace Logger** supports four log levels with the following hierarchy:
 
 DEBUG → INFO → WARN → ERROR
 
@@ -190,13 +190,13 @@ Once the system stabilizes, logging automatically resumes.
 
 ### 🧩 Circuit Breaker Flow (Visual Representation)
 
-You can visualize how the **Circuit Breaker** works in **Scale Trace** using this flowchart:
+You can visualize how the **Circuit Breaker** works in **Trace Logger** using this flowchart:
 
 ---
 
 ### 🧩 Circuit Breaker Flow (Visual Representation)
 
-You can visualize how the **Circuit Breaker** mechanism works in **Scale Trace** using this flow diagram:
+You can visualize how the **Circuit Breaker** mechanism works in **Trace Logger** using this flow diagram:
 
 ![Circuit Breaker Flow](https://i.postimg.cc/7YjMHcNG/deepseek-mermaid-20251029-0fb37f.png)
 
@@ -261,7 +261,7 @@ It captures details like method, URL, response time, and trace ID — helping yo
 
 ```javascript
 import express from 'express';
-import { logger, httpLogger } from 'scale-trace';
+import { logger, httpLogger } from 'trace-logger';
 
 const app = express();
 
@@ -377,7 +377,7 @@ Captures:
 **Example:**
 ```javascript
 import express from 'express';
-import { httpLogger } from 'scale-trace';
+import { httpLogger } from 'trace-logger';
 
 const app = express();
 app.use(httpLogger());
@@ -451,14 +451,14 @@ app.use(httpLogger());
 
 ### 📁 Log File Structure
 
-When log rotation is enabled, Scale Trace automatically creates timestamped backups of your log files to prevent size overflow.
+When log rotation is enabled, Trace Logger automatically creates timestamped backups of your log files to prevent size overflow.
 
 ```text
 logs/
 ├── app.log                     # Current active log file
 ├── app-2025-01-15_10-30-45.log # Rotated file (newer)
 └── app-2025-01-15_09-15-20.log # Rotated file (older)
-
+```
 
 
 
@@ -466,10 +466,10 @@ logs/
 
 ## 📘 Complete Example Configuration
 
-Here’s a full example showing how to initialize **Scale Trace** with all major configuration options enabled — including **file rotation**, **circuit breaker**, and **custom colors**.
+Here’s a full example showing how to initialize **Trace Logger** with all major configuration options enabled — including **file rotation**, **circuit breaker**, and **custom colors**.
 
 ```javascript
-import { logger } from 'scale-trace';
+import { logger } from 'trace-logger';
 
 logger.init({
   // Logging mode
@@ -549,7 +549,7 @@ Combine this setup with the `httpLogger()` middleware to automatically log incom
 
 ```javascript
 import express from 'express';
-import { httpLogger } from 'scale-trace';
+import { httpLogger } from 'trace-logger';
 
 const app = express();
 
@@ -557,7 +557,7 @@ const app = express();
 app.use(httpLogger()); // Logs all incoming HTTP requests automatically
 
 app.get('/', (req, res) => {
-  res.send('Hello, ScaleTrace Logger is working!');
+  res.send('Hello, Trace Logger is working!');
 });
 
 app.listen(3000, () => console.log('🚀 Server running on port 3000'));
@@ -680,7 +680,7 @@ Demonstrates how to integrate the `httpLogger()` middleware into an Express app 
 
 ```javascript
 import express from 'express';
-import { httpLogger } from 'scale-trace';
+import { httpLogger } from 'trace-logger';
 
 const app = express();
 
@@ -915,7 +915,7 @@ See the [LICENSE](./LICENSE) file for complete details.
 
 ---
 
-**Scale Trace** — Built with ❤️ for the **Node.js** community.  
+**Trace Logger** — Built with ❤️ for the **Node.js** community.  
 Empowering developers with reliable, production-grade logging and tracing.
 
 ---
