@@ -875,6 +875,264 @@ This makes it perfectly suited for **large-scale Node.js production systems**.
 
 ---
 
+
+
+
+
+# 🔍 Patal-Log - Advanced Node.js Logger
+
+[![npm version](https://img.shields.io/npm/v/patal-log.svg)](https://www.npmjs.com/package/patal-log)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A powerful and production-ready logging library for Node.js with **traceId propagation**, **circuit breaker**, **log rotation**, **HTTP & Prisma integration**, and **async context support**.
+
+---
+
+## 🚀 Features
+
+- ✅ TraceId propagation using AsyncLocalStorage  
+- ✅ HTTP request logging middleware  
+- ✅ External API call logging  
+- ✅ Prisma SQL query logging with traceId  
+- ✅ Circuit breaker for log overload protection  
+- ✅ Log rotation support  
+- ✅ File & console logging  
+- ✅ Background job trace support  
+
+---
+
+## 📦 Installation
+
+```bash
+npm install patal-log
+# or
+yarn add patal-log
+```
+
+---
+
+## ⚡ Quick Start
+
+### Basic Logger Setup
+
+```ts
+import { logger } from 'patal-log';
+
+logger.init({
+  mode: 'pro',
+  logLevel: 'info',
+  filePath: './logs/app.log',
+  colors: true,
+});
+
+logger.info('User logged in', {
+  functionName: 'AuthController.login',
+  metadata: { userId: '123' }
+});
+```
+
+---
+
+## 🌐 HTTP Request Logging
+
+```ts
+import express from 'express';
+import { httpLogger } from 'patal-log';
+
+const app = express();
+app.use(httpLogger());
+
+app.get('/api/users', (req, res) => {
+  res.json({ users: [] });
+});
+```
+
+Each request automatically gets a **traceId**.
+
+---
+
+## 🧭 TraceId Utilities (v1.1.0)
+
+### getLiveTraceId()
+
+```ts
+import { getLiveTraceId } from 'patal-log';
+
+const traceId = getLiveTraceId();
+```
+
+### withTraceId()
+
+```ts
+import { withTraceId } from 'patal-log';
+
+await withTraceId('custom-trace-id', async () => {
+  logger.info('Inside trace context');
+});
+```
+
+---
+
+## 🔗 External API Logging
+
+```ts
+import { logExternalCall } from 'patal-log';
+
+logExternalCall('/api/users', 'GET', {
+  functionName: 'UserService.fetchUsers'
+}, 200);
+```
+
+### Custom TraceId
+
+```ts
+logExternalCall('/api/users', 'GET', {
+  functionName: 'UserService.fetchUsers'
+}, 200, undefined, {
+  traceId: 'custom-trace-123',
+  includeTraceId: true
+});
+```
+
+### Hide TraceId
+
+```ts
+logExternalCall('/analytics', 'POST', {
+  functionName: 'Analytics.track'
+}, 200, undefined, {
+  includeTraceId: false
+});
+```
+
+---
+
+## 🗄️ Prisma Logging with TraceId
+
+```ts
+import { PrismaClient } from '@prisma/client';
+import { getLiveTraceId } from 'patal-log';
+
+const prisma = new PrismaClient({
+  log: [{ level: 'query', emit: 'event' }],
+});
+
+prisma.$on('query', (e) => {
+  const traceId = getLiveTraceId();
+  console.log('[SQL]', e.query);
+  if (traceId) console.log('TraceId:', traceId);
+});
+```
+
+---
+
+## 🧵 Background Jobs
+
+```ts
+import { withTraceId, logger } from 'patal-log';
+
+async function processJob(job: any) {
+  return withTraceId(`job-${job.id}`, async () => {
+    logger.info('Job started');
+    logger.info('Job completed');
+  });
+}
+```
+
+---
+
+## ⚙️ Configuration Options
+
+```ts
+logger.init({
+  mode: 'pro',
+  logLevel: 'debug',
+  colors: true,
+  circuitBreaker: {
+    circuitBreakerCount: 5,
+    circuitBreakerTime: 30000,
+    circuitBreakerCooldown: 60000
+  },
+  rotation: {
+    enabled: true,
+    maxSize: '10m',
+    maxFiles: 5
+  }
+});
+```
+
+---
+
+## 📘 API Reference
+
+### Logger
+- logger.init(config)
+- logger.info(message, options)
+- logger.warn(message, options)
+- logger.error(message, options)
+- logger.debug(message, options)
+
+### Trace
+- getLiveTraceId()
+- withTraceId(traceId, callback)
+
+### HTTP
+- httpLogger()
+
+### External Calls
+- logExternalCall(endpoint, method, metadata, statusCode?, error?, options?)
+
+---
+
+## 🐛 Troubleshooting
+
+### TraceId missing in Prisma
+Use `withTraceId()` around DB calls.
+
+### Duplicate Prisma Logs
+Disable Prisma default logs:
+```ts
+new PrismaClient({ log: [] });
+```
+
+### Error stack too long
+Now only error message is shown (v1.1.0).
+
+---
+
+## 📝 Changelog
+
+### v1.1.0
+- Added getLiveTraceId
+- Added withTraceId
+- Improved async context handling
+- Enhanced Prisma logging
+- Trace control in external calls
+
+### v1.0.0
+- Initial release
+- HTTP logging
+- Circuit breaker
+- Log rotation
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repo  
+2. Create a branch (`git checkout -b feature/new-feature`)  
+3. Commit changes  
+4. Push & open PR  
+
+---
+
+## 📄 License
+
+MIT © Patal-Log
+
+
+
+
+
 ## 🤝 Contributing
 
 We welcome all community contributions!  

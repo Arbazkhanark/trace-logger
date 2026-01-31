@@ -10,6 +10,33 @@ import { LogRotator, RotationOptions } from './log.rotation.js';
 // AsyncLocalStorage for request context
 const asyncLocalStorage = new AsyncLocalStorage<Map<string, string>>();
 
+
+
+
+/**
+ * Get current traceId from asyncLocalStorage
+ * Use this to get traceId for manual logging or passing to external services
+ */
+export function getLiveTraceId(): string | undefined {
+  return asyncLocalStorage.getStore()?.get('traceId');
+}
+
+
+/**
+ * Execute async function with traceId context
+ * Essential for Prisma queries to maintain same traceId
+ */
+export function withTraceId<T>(traceId: string, callback: () => Promise<T>): Promise<T> {
+  const store = new Map<string, string>();
+  store.set('traceId', traceId);
+
+  return asyncLocalStorage.run(store, async () => {
+    return callback();
+  });
+}
+
+
+
 // ANSI color codes for colorful output
 const Colors = {
   reset: '\x1b[0m',
@@ -52,6 +79,7 @@ export interface LogOptions {
   customColor?: string;
   logColor?: string;
   fullLogColor?: string;
+  includeTraceId?: boolean; // ✅ Naya option add karo
 }
 
 export interface LoggerConfig {
@@ -148,7 +176,7 @@ function getColorCode(colorName: string): string {
 }
 
 // Format log in EXACT old multi-line format with single-line JSON metadata
-function formatLog(level: string, msg: string, opts: LogOptions, useColors: boolean = true, customLevelColors?: any): string {
+function formatLog1(level: string, msg: string, opts: LogOptions, useColors: boolean = true, customLevelColors?: any): string {
   const traceId = asyncLocalStorage.getStore()?.get('traceId') || uuidv4();
 
   // Use single-line JSON for metadata (no pretty printing)
@@ -177,6 +205,54 @@ function formatLog(level: string, msg: string, opts: LogOptions, useColors: bool
 
   // Build output with fullLogColor applied to everything except level
   let output = `${fullLogColor}${brightColor}${getTimestamp()}:${resetColor} ${levelColor}${level}${resetColor}: ${fullLogColor}${logColor}${msg}${resetColor}\n${fullLogColor}${dimColor}Trace Id: ${traceId}${resetColor}\n${fullLogColor}${dimColor}Function Name: ${opts.functionName}${resetColor}\n${fullLogColor}${dimColor}Metadata: ${metadata}${resetColor}`;
+
+  if (opts.error?.stack) {
+    const errorColor = useColors ? Colors.red : '';
+    output = `${output}\n${fullLogColor}${errorColor}Error Stack: ${opts.error.stack}${resetColor}`;
+  }
+
+  return output;
+}
+
+
+// Format log in EXACT old multi-line format with single-line JSON metadata
+function formatLog(level: string, msg: string, opts: LogOptions, useColors: boolean = true, customLevelColors?: any): string {
+  // ✅ TraceId conditional check - default true rahega
+  const includeTraceId = opts.includeTraceId !== false; // Default true unless explicitly false
+  const traceId = includeTraceId ? asyncLocalStorage.getStore()?.get('traceId') || uuidv4() : null;
+
+  // Use single-line JSON for metadata (no pretty printing)
+  const metadata = opts.metadata ? JSON.stringify(opts.metadata) : '{}';
+
+  // LOG LEVEL COLOR: Use custom color if provided in log options, then custom level colors, then default
+  let levelColor = DefaultLevelColors[level as keyof typeof DefaultLevelColors];
+
+  if (opts.customColor) {
+    levelColor = getColorCode(opts.customColor);
+  } else if (customLevelColors && customLevelColors[level]) {
+    levelColor = getColorCode(customLevelColors[level]);
+  }
+
+  const resetColor = Colors.reset;
+
+  // Other colors depend on useColors flag
+  const dimColor = useColors ? Colors.dim : '';
+  const brightColor = useColors ? Colors.bright : '';
+
+  // Apply full log color to everything except level
+  const fullLogColor = opts.fullLogColor ? getColorCode(opts.fullLogColor) : '';
+
+  // Apply log color only to the message if specified
+  const logColor = opts.logColor ? getColorCode(opts.logColor) : '';
+
+  // ✅ Build output with conditional traceId
+  let output = `${fullLogColor}${brightColor}${getTimestamp()}:${resetColor} ${levelColor}${level}${resetColor}: ${fullLogColor}${logColor}${msg}${resetColor}`;
+
+  if (traceId) {
+    output = `${output}\n${fullLogColor}${dimColor}Trace Id: ${traceId}${resetColor}`;
+  }
+
+  output = `${output}\n${fullLogColor}${dimColor}Function Name: ${opts.functionName}${resetColor}\n${fullLogColor}${dimColor}Metadata: ${metadata}${resetColor}`;
 
   if (opts.error?.stack) {
     const errorColor = useColors ? Colors.red : '';
@@ -487,8 +563,19 @@ export function logExternalCall(
   metadata: Record<string, any>,
   statusCode?: number,
   error?: Error,
+  options?: {
+    traceId?: string; // Optional: manually provide traceId
+    includeTraceId?: boolean; // Control traceId visibility
+  }
 ) {
-  const traceId = asyncLocalStorage.getStore()?.get('traceId') || uuidv4();
+  // ✅ Priority: 1. Manual from options, 2. Current context, 3. Nothing
+  const manualTraceId = options?.traceId;
+  const contextTraceId = getLiveTraceId(); // ✅ Using our helper
+  const traceId = manualTraceId || contextTraceId;
+
+  // ✅ Whether to include traceId in output
+  const shouldIncludeTraceId = options?.includeTraceId !== false && !!traceId;
+
   const baseMetadata = {
     endpoint,
     method,
@@ -496,17 +583,21 @@ export function logExternalCall(
     ...metadata,
   };
 
+  // Prepare log options
+  const logOptions: LogOptions = {
+    functionName: metadata.functionName || 'ExternalService.call',
+    metadata: baseMetadata,
+    includeTraceId: shouldIncludeTraceId,
+  };
+
   if (error) {
     logger.error(`External API call failed`, {
-      functionName: metadata.functionName || 'ExternalService.call',
+      ...logOptions,
       metadata: { ...baseMetadata, statusCode },
       error,
     });
   } else {
-    logger.info(`Making external API request`, {
-      functionName: metadata.functionName || 'ExternalService.call',
-      metadata: baseMetadata,
-    });
+    logger.info(`Making external API request`, logOptions);
   }
 }
 
